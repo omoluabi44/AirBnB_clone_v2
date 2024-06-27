@@ -1,0 +1,66 @@
+def parse_create_command(command):
+        """
+    Parse the create command to extract class name and parameters.
+
+    Args:
+        command (str): The full command string.
+
+    Returns:
+        tuple: A tuple containing the class name (str) and a dictionary of parameters (dict).
+    """
+            # Trim the command string
+                command = command.strip()
+
+                    # Split the command by spaces
+                        parts = command.split()
+
+                            # Ensure there's at least a class name
+                                if len(parts) == 0:
+                                            raise ValueError("Class name missing")
+
+                                            # Extract class name
+                                                class_name = parts[0]
+
+                                                    # Extract parameters
+                                                        params_list = parts[1:]
+
+                                                            # Initialize the dictionary for key-value pairs
+                                                                params = {}
+
+                                                                    for param in params_list:
+                                                                                # Split by the first '=' to separate key and value
+                                                                                if '=' not in param:
+                                                                                                continue  # Skip invalid parameters
+                                                                                                    key, value = param.split('=', 1)
+
+                                                                                                            # Clean key
+                                                                                                                    key = key.strip()
+
+                                                                                                                            # Process value
+                                                                                                                                    if value.startswith('"') and value.endswith('"'):
+                                                                                                                                                    # Handle string values
+                                                                                                                                                    value = value[1:-1].replace('_', ' ').replace('\\"', '"')
+                                                                                                                                    elif '.' in value:
+                                                                                                                                                    # Handle float values
+                                                                                                                                                    try:
+                                                                                                                                                                        value = float(value)
+                                                                                                                                                    except ValueError:
+                                                                                                                                                                        continue  # Skip invalid float values
+                                                                                                                                                    else:
+                                                                                                                                                                    # Handle integer values
+                                                                                                                                                                    try:
+                                                                                                                                                                                        value = int(value)
+                                                                                                                                                                    except ValueError:
+                                                                                                                                                                                        continue  # Skip invalid integer values
+
+                                                                                                                                                                                            # Add to dictionary
+                                                                                                                                                                                                    params[key] = value
+
+                                                                                                                                                                                                        return class_name, params
+
+                                                                                                                                                                                                    # Example usage:
+                                                                                                                                                                                                    command = 'MyClass name="My_little_house" height=10.5 rooms=3'
+                                                                                                                                                                                                    class_name, params = parse_create_command(command)
+                                                                                                                                                                                                    print(f"Class name: {class_name}")
+                                                                                                                                                                                                    print(f"Parameters: {params}")
+                                                                                                                                                                                                    
