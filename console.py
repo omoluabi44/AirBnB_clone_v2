@@ -143,7 +143,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 value = int(value)
             params[key] = value
-            new_instance = HBNBCommand.classes[class_name]()
+        new_instance = HBNBCommand.classes[class_name]()
 
         for key, value in params.items():
             setattr(new_instance, key, value)
