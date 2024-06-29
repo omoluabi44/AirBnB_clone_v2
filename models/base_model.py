@@ -23,6 +23,8 @@ class BaseModel:
             self.updated_at = datetime.utcnow()
         else:
             for key, value in kwargs.items():
+                if key == '__class__':
+                    continue
                 setattr(self, key, value)
                 if key in ['created_at', 'updated_at']:
                     setattr(self, key,
