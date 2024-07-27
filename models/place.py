@@ -2,16 +2,27 @@
 """ Place Module for HBNB project """
 from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
+from sqlalchemy import Column, Table, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, Table
+from os import getenv
 import models
 
+"""
 place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60),
                              ForeignKey('places.id'), primary_key=True,
                              nullable=False),
                       Column('amenity_id', String(60),
                              ForeignKey('amenities.id'), primary_key=True,
+                             nullable=False))"""
+place_amenity = Table("place_amenity", Base.metadata,
+                      Column("place_id", String(60),
+                             ForeignKey("places.id"),
+                             primary_key=True,
+                             nullable=False),
+                      Column("amenity_id", String(60),
+                             ForeignKey("amenities.id"),
+                             primary_key=True,
                              nullable=False))
 
 
@@ -29,12 +40,15 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     amenity_ids = []
-
-    reviews = relationship("Review", cascade='all, delete, delete-orphan',
-                           backref="place")
-    amenities = relationship('Amenity',
-                             secondary=place_amenity,
-                             viewonly=False, back_populates='place_amenities')
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        reviews = relationship("Review", cascade='all, delete, delete-orphan',
+                               backref="place")
+        """ amenities = relationship('Amenity',
+                                 secondary=place_amenity,
+                                 viewonly=False, back_populates='place_amenities')"""
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False,
+                                 back_populates="place_amenities")
 
     @property
     def reviews(self):
@@ -51,7 +65,6 @@ class Place(BaseModel, Base):
 
     @amenities.setter
     def amenities(self, obj=None):
-        """Setter for amenities in FileStorage"""
-        if instance(obj, amenity):
-            if obj.id not in self.amenity_ids:
-                self.amenity_ids.append(obj.id)
+        """ Appends amenity ids to the attribute """
+        if type(obj) is Amenity and obj.id not in self.amenity_ids:
+            self.amenity_ids.append(obj.id)
