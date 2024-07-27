@@ -28,13 +28,9 @@ def Python_is_fun(text):
     return f"Python {text.replace('_', ' ')}"
 
 
-@app.route("/number/<n>")
+@app.route("/number/<int:n>")
 def number(n):
-    try:
-        int_n = int(n)
-        return "{} is a number" .format(int_n)
-    except ValueError:
-        pass
+        return "{:d} is a number" .format(n)
 
 
 if __name__ == '__main__':
