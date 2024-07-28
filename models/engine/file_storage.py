@@ -39,7 +39,8 @@ class FileStorage:
         key = obj.to_dict()['__class__'] + '.' + obj.id
         if key in FileStorage.__objects:
             del FileStorage.__objects[key]
-
+    def close(self):
+        self.reload()
     def reload(self):
         """Loads storage dictionary from file"""
         from models.base_model import BaseModel
