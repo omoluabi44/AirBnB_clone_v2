@@ -16,11 +16,11 @@ def teardown_db(exception):
     storage.close()
 
 
-@app.route('/states_list')
+@app.route('/cities_by_states')
 def states_list():
     """display a HTML page with the states listed in alphabetical order"""
     states = storage.all(State).values()
-    return render_template('7-states_list.html', states=states)
+    return render_template('8-cities_by_states.html', states=states)
 
 
 if __name__ == '__main__':
